@@ -30,6 +30,7 @@ public class ContactServiceImpl implements ContactService {
     AddressRepo addressRepo;
 
     @Override
+    @Transactional
     public void createContact(ContactDTO contactDTO) {
         ContactEntity contactEntity = ConverterFromDTO.convertContactDTOToContactEntity(contactDTO);
         List<PhoneEntity> phones = ConverterFromDTO.convertPhoneStringToPhoneEntity(contactDTO, contactEntity);
@@ -41,7 +42,7 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public void updateContact(Long id, ContactDTO contactDTO) {
         ContactEntity contactEntity = contactRepo.findById(id).orElseThrow(null);
         contactEntity = ConverterFromDTO.convertContactDTOToContactEntityForUpdate(id, contactDTO);
