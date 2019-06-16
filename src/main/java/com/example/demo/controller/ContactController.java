@@ -14,7 +14,6 @@ public class ContactController {
     @Autowired
     ContactService contactService;
 
-    //Get
     @GetMapping(value = "/getContact")
     private ContactDTO getContact(@RequestParam(name = "id") Long id) {
         return contactService.getContact(id);
@@ -26,22 +25,25 @@ public class ContactController {
     }
 
     @GetMapping(value = "/getAllContactsByName")
-    List<ContactDTO> getAllContactsByName(@RequestParam(name = "name") String name) {
+    private List<ContactDTO> getAllContactsByName(@RequestParam(name = "name") String name) {
         return contactService.getAllContactsByName(name);
     }
 
     @GetMapping(value = "/getContactByPhone")
-    List<ContactDTO> getAllContactsByPhone(@RequestParam(name = "phone") String phone) {
+    private List<ContactDTO> getAllContactsByPhone(@RequestParam(name = "phone") String phone) {
         return contactService.getAllContactsByPhone(phone);
     }
 
-    //Create
     @PostMapping(value = "/createNewContact")
     private void createNewContact(@RequestBody ContactDTO contactDTO) {
         contactService.createContact(contactDTO);
     }
 
-    //Delete
+    @PostMapping(value = "/updateContact")
+    private void updateContact(@RequestBody ContactDTO contactDTO) {
+        contactService.updateContact(contactDTO);
+    }
+
     @DeleteMapping(value = "/deleteContact")
     private void deleteContact(@RequestParam(name = "id") Long id) {
         contactService.deleteContact(id);

@@ -9,6 +9,7 @@ import com.example.demo.repo.ContactRepo;
 import com.example.demo.repo.PhoneRepo;
 import com.example.demo.util.ConverterFromDTO;
 import com.example.demo.util.ConverterToDTO;
+import org.hibernate.NonUniqueResultException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -34,36 +35,22 @@ public class ContactServiceImpl implements ContactService {
 //    @ResponseStatus(HttpStatus.CREATED)
     public void createContact(ContactDTO contactDTO) {
         ContactEntity contactEntity = ConverterFromDTO.convertContactDTOToContactEntity(contactDTO);
-//        List<PhoneEntity> phones = ConverterFromDTO.createAddress(contactDTO, contactEntity);
-//        List<AddressEntity> addresses = ConverterFromDTO.convertAddressDTOToAddressEntity(contactDTO, contactEntity);
+        List<PhoneEntity> phones = ConverterFromDTO.convertPhoneStringToPhoneEntity(contactDTO, contactEntity);
+        List<AddressEntity> addresses = ConverterFromDTO.convertAddressDTOToAddressEntity(contactDTO, contactEntity);
 
         contactRepo.save(contactEntity);
-//        phoneRepo.saveAll(phones);
-//        addressRepo.saveAll(addresses);
+        phoneRepo.saveAll(phones);
+        addressRepo.saveAll(addresses);
     }
 
-//    public static PhoneEntity createAddress(ContactEntity contactEntity, ContactDTO contactDTO, String phone) {
-//        return (PhoneEntity) contactDTO.getPhones().stream().map(phoneelement -> ConverterFromDTO.putPhoneToPhoneEntity(contactEntity, phoneelement)).collect(Collectors.toList());
-//    }
-//
-//    public static List<PhoneEntity> foo(ContactDTO contactDTO, ContactEntity contactEntity) {
-//        return contactDTO.getPhones().stream()
-//                .map(phone -> boo(phone, contactEntity))
-//                .collect(Collectors.toList());
-//    }
-//
-//    private PhoneEntity boo(String phoneElement, ContactEntity contactEntity) {
-//        PhoneEntity phoneEntity = phoneRepo.findPhoneByPhone(phone).orElse(
-//
-//        phoneEntity.getUser().add(user);
-//        return phoneEntity;
-//    }
-
     @Override
-    @Transactional(readOnly = true)
-    public List<ContactDTO> getAllContactsByName(String fullname) {
-        List<ContactEntity> names = contactRepo.findAllByFullName(fullname);
-        return names.stream().map(name -> getContact(name.getId())).collect(Collectors.toList());
+    public void updateContact(ContactDTO contactDTO) {
+        ContactEntity contactEntity = ConverterFromDTO.convertContactDTOToContactEntity(contactDTO);
+        List<AddressEntity> addresses = ConverterFromDTO.convertAddressDTOToAddressEntity(contactDTO, contactEntity);
+        List<PhoneEntity> phones = ConverterFromDTO.convertPhoneStringToPhoneEntity(contactDTO, contactEntity);
+        contactRepo.save(contactEntity);
+        addressRepo.saveAll(addresses);
+        phoneRepo.saveAll(phones);
     }
 
     @Override
@@ -78,15 +65,17 @@ public class ContactServiceImpl implements ContactService {
     @Override
     @Transactional(readOnly = true)
     public List<ContactDTO> getAllContactsByPhone(String phone) {
-        List<PhoneEntity> phoneEntities = phoneRepo.findByPhoneOrderByContactEntityId(phone);
+        List<PhoneEntity> phoneEntities = phoneRepo.findAllByPhone(phone);
         System.out.println(phoneEntities);
-        List<ContactEntity> contactEntities = phoneEntities.stream().map(elementPhone -> elementPhone.getContactEntity()).collect(Collectors.toList());
-        System.out.println(contactEntities);
-        List<AddressEntity> addressEntities =
-                contactEntities.stream().map(contact -> addressRepo.findByContactEntity(contact)).collect(Collectors.toList());
-        System.out.println(addressEntities);
-        return contactEntities.stream().map(contactEntity
-                -> ConverterToDTO.convertContactEntityToContactDTO(contactEntity, addressEntities, phoneEntities)).collect(Collectors.toList());
+        return phoneEntities.stream().map(phoneelement
+                -> getContact(phoneelement.getContactEntity().getId())).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ContactDTO> getAllContactsByName(String fullname) {
+        List<ContactEntity> names = contactRepo.findAllByFullName(fullname);
+        return names.stream().map(name -> getContact(name.getId())).collect(Collectors.toList());
     }
 
     @Override

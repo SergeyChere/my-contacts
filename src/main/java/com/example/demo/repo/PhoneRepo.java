@@ -10,6 +10,6 @@ import java.util.List;
 @Repository("phone_entity")
 public interface PhoneRepo extends JpaRepository<PhoneEntity, Long> {
     List<PhoneEntity> findByContactEntityId(Long id);
-    List<PhoneEntity> findByPhoneOrderByContactEntityId(String phoneNumber);
+    List<PhoneEntity> findAllByPhone(String phoneNumber);
     void deleteAllByContactEntity(ContactEntity contactEntity);
 }
