@@ -10,6 +10,5 @@ import java.util.List;
 @Repository
 public interface AddressRepo extends JpaRepository<AddressEntity, Long> {
     List<AddressEntity> findAllByContactEntityId(Long id);
-    AddressEntity findByContactEntity(ContactEntity contactEntity);
     void deleteAllByContactEntity(ContactEntity contactEntity);
 }

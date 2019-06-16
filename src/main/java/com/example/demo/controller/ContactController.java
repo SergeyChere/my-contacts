@@ -40,8 +40,8 @@ public class ContactController {
     }
 
     @PostMapping(value = "/updateContact")
-    private void updateContact(@RequestBody ContactDTO contactDTO) {
-        contactService.updateContact(contactDTO);
+    private void updateContact(@RequestParam(name = "id") Long id, @RequestBody ContactDTO contactDTO) {
+        contactService.updateContact(id, contactDTO);
     }
 
     @DeleteMapping(value = "/deleteContact")

@@ -41,24 +41,29 @@ public class ConverterFromDTO {
                 .street(addressDTO.getStreet())
                 .houseNumber(addressDTO.getHouseNumber())
                 .apartment(addressDTO.getApartment())
+                .contactEntity(contactEntity)
                 .build();
-        addressEntity.setContactEntity(contactEntity);
         return addressEntity;
     }
 
     public static List<PhoneEntity> convertPhoneStringToPhoneEntity(ContactDTO contactDTO, ContactEntity contactEntity) {
         return contactDTO.getPhones().stream().map(phone
-                -> convertPhonesStringToPhoneEntity(contactEntity, phone, contactDTO)).collect(Collectors.toList());
+                -> convertPhonesStringToPhoneEntity(contactEntity, phone)).collect(Collectors.toList());
     }
 
-    //This method don't work
     public static PhoneEntity convertPhonesStringToPhoneEntity(
-            ContactEntity contactEntity, String phoneelement, ContactDTO contactDTO) {
-        PhoneEntity phoneEntity = PhoneEntity.builder()
-                .time(LocalDateTime.now()
-                .(contactDTO.getPhones(newphone -> ))
-                .build();
-        phoneEntity.setContactEntity(contactEntity);
+            ContactEntity contactEntity, String phoneelement) {
+        PhoneEntity phoneEntity = PhoneEntity.builder().phone(phoneelement).time(LocalDateTime.now()).contactEntity(contactEntity).build();
         return phoneEntity;
+    }
+
+    public static ContactEntity convertContactDTOToContactEntityForUpdate(Long id, ContactDTO contactDTO) {
+        ContactEntity contactEntity = ContactEntity.builder()
+                .id(id)
+                .fullName(contactDTO.getFullName())
+                .time(LocalDateTime.now())
+                .email(contactDTO.getEmail())
+                .build();
+        return contactEntity;
     }
 }

@@ -14,6 +14,6 @@ public interface ContactService {
     List<ContactDTO> getAllContactsByPhone(String phone);
 
     void createContact(ContactDTO contactDTO);
-    void updateContact(ContactDTO contactDTO);
+    void updateContact(Long id, ContactDTO contactDTO);
     void deleteContact(Long id);
 }

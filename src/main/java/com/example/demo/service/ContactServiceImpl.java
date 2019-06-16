@@ -9,12 +9,10 @@ import com.example.demo.repo.ContactRepo;
 import com.example.demo.repo.PhoneRepo;
 import com.example.demo.util.ConverterFromDTO;
 import com.example.demo.util.ConverterToDTO;
-import org.hibernate.NonUniqueResultException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,7 +30,6 @@ public class ContactServiceImpl implements ContactService {
     AddressRepo addressRepo;
 
     @Override
-//    @ResponseStatus(HttpStatus.CREATED)
     public void createContact(ContactDTO contactDTO) {
         ContactEntity contactEntity = ConverterFromDTO.convertContactDTOToContactEntity(contactDTO);
         List<PhoneEntity> phones = ConverterFromDTO.convertPhoneStringToPhoneEntity(contactDTO, contactEntity);
@@ -44,13 +41,20 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public void updateContact(ContactDTO contactDTO) {
-        ContactEntity contactEntity = ConverterFromDTO.convertContactDTOToContactEntity(contactDTO);
-        List<AddressEntity> addresses = ConverterFromDTO.convertAddressDTOToAddressEntity(contactDTO, contactEntity);
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void updateContact(Long id, ContactDTO contactDTO) {
+        ContactEntity contactEntity = contactRepo.findById(id).orElseThrow(null);
+        contactEntity = ConverterFromDTO.convertContactDTOToContactEntityForUpdate(id, contactDTO);
+
         List<PhoneEntity> phones = ConverterFromDTO.convertPhoneStringToPhoneEntity(contactDTO, contactEntity);
+        List<AddressEntity> addresses = ConverterFromDTO.convertAddressDTOToAddressEntity(contactDTO, contactEntity);
+
+        phoneRepo.deleteAllByContactEntity(contactEntity);
+        addressRepo.deleteAllByContactEntity(contactEntity);
+
         contactRepo.save(contactEntity);
-        addressRepo.saveAll(addresses);
         phoneRepo.saveAll(phones);
+        addressRepo.saveAll(addresses);
     }
 
     @Override
