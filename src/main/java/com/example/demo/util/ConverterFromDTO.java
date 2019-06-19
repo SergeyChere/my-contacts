@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Service
 public class ConverterFromDTO {
 
-    public static ContactEntity convertContactDTOToContactEntity(ContactDTO contactDTO) {
+    public ContactEntity convertContactDTOToContactEntity(ContactDTO contactDTO) {
         ContactEntity contactEntity = ContactEntity.builder()
                 .fullName(contactDTO.getFullName())
                 .time(LocalDateTime.now())
@@ -28,12 +28,12 @@ public class ConverterFromDTO {
         return contactEntity;
     }
 
-    public static List<AddressEntity> convertAddressDTOToAddressEntity(ContactDTO contactDTO, ContactEntity contactEntity) {
+    public List<AddressEntity> convertAddressDTOToAddressEntity(ContactDTO contactDTO, ContactEntity contactEntity) {
         return contactDTO.getAddresses().stream().map(address
                 -> convertAddressDtoToAddress(contactEntity, address)).collect(Collectors.toList());
     }
 
-    public static AddressEntity convertAddressDtoToAddress(ContactEntity contactEntity, AddressDTO addressDTO) {
+    public AddressEntity convertAddressDtoToAddress(ContactEntity contactEntity, AddressDTO addressDTO) {
         AddressEntity addressEntity = AddressEntity.builder()
                 .time(LocalDateTime.now())
                 .country(addressDTO.getCountry())
@@ -46,18 +46,18 @@ public class ConverterFromDTO {
         return addressEntity;
     }
 
-    public static List<PhoneEntity> convertPhoneStringToPhoneEntity(ContactDTO contactDTO, ContactEntity contactEntity) {
+    public List<PhoneEntity> convertPhoneStringToPhoneEntity(ContactDTO contactDTO, ContactEntity contactEntity) {
         return contactDTO.getPhones().stream().map(phone
                 -> convertPhonesStringToPhoneEntity(contactEntity, phone)).collect(Collectors.toList());
     }
 
-    public static PhoneEntity convertPhonesStringToPhoneEntity(
+    public PhoneEntity convertPhonesStringToPhoneEntity(
             ContactEntity contactEntity, String phoneelement) {
         PhoneEntity phoneEntity = PhoneEntity.builder().phone(phoneelement).time(LocalDateTime.now()).contactEntity(contactEntity).build();
         return phoneEntity;
     }
 
-    public static ContactEntity convertContactDTOToContactEntityForUpdate(Long id, ContactDTO contactDTO) {
+    public ContactEntity convertContactDTOToContactEntityForUpdate(Long id, ContactDTO contactDTO) {
         ContactEntity contactEntity = ContactEntity.builder()
                 .id(id)
                 .fullName(contactDTO.getFullName())

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository("phone_entity")
+@Repository
 public interface PhoneRepo extends JpaRepository<PhoneEntity, Long> {
     List<PhoneEntity> findByContactEntityId(Long id);
     List<PhoneEntity> findAllByPhone(String phoneNumber);

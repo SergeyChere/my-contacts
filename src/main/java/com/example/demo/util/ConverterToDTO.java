@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @Service
 public class ConverterToDTO {
 
-    public static ContactDTO convertContactEntityToContactDTO(
+    public ContactDTO convertContactEntityToContactDTO(
             ContactEntity contactEntity, List<AddressEntity> addressEntities, List<PhoneEntity> phoneEntities) {
         return ContactDTO.builder()
                 .fullName(contactEntity.getFullName())
@@ -23,7 +23,7 @@ public class ConverterToDTO {
                 .build();
     }
 
-    public static AddressDTO convertAddressEntityToAddressDTO(AddressEntity addressEntity) {
+    public AddressDTO convertAddressEntityToAddressDTO(AddressEntity addressEntity) {
         return AddressDTO.builder()
                 .country(addressEntity.getCountry())
                 .city(addressEntity.getCity())

@@ -11,7 +11,6 @@ import com.example.demo.util.ConverterFromDTO;
 import com.example.demo.util.ConverterToDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -29,12 +28,18 @@ public class ContactServiceImpl implements ContactService {
     @Autowired
     AddressRepo addressRepo;
 
+    @Autowired
+    ConverterToDTO converterToDTO;
+
+    @Autowired
+    ConverterFromDTO converterFromDTO;
+
     @Override
     @Transactional
     public void createContact(ContactDTO contactDTO) {
-        ContactEntity contactEntity = ConverterFromDTO.convertContactDTOToContactEntity(contactDTO);
-        List<PhoneEntity> phones = ConverterFromDTO.convertPhoneStringToPhoneEntity(contactDTO, contactEntity);
-        List<AddressEntity> addresses = ConverterFromDTO.convertAddressDTOToAddressEntity(contactDTO, contactEntity);
+        ContactEntity contactEntity = converterFromDTO.convertContactDTOToContactEntity(contactDTO);
+        List<PhoneEntity> phones = converterFromDTO.convertPhoneStringToPhoneEntity(contactDTO, contactEntity);
+        List<AddressEntity> addresses = converterFromDTO.convertAddressDTOToAddressEntity(contactDTO, contactEntity);
 
         contactRepo.save(contactEntity);
         phoneRepo.saveAll(phones);
@@ -45,10 +50,10 @@ public class ContactServiceImpl implements ContactService {
     @Transactional
     public void updateContact(Long id, ContactDTO contactDTO) {
         ContactEntity contactEntity = contactRepo.findById(id).orElseThrow(null);
-        contactEntity = ConverterFromDTO.convertContactDTOToContactEntityForUpdate(id, contactDTO);
+        contactEntity = converterFromDTO.convertContactDTOToContactEntityForUpdate(id, contactDTO);
 
-        List<PhoneEntity> phones = ConverterFromDTO.convertPhoneStringToPhoneEntity(contactDTO, contactEntity);
-        List<AddressEntity> addresses = ConverterFromDTO.convertAddressDTOToAddressEntity(contactDTO, contactEntity);
+        List<PhoneEntity> phones = converterFromDTO.convertPhoneStringToPhoneEntity(contactDTO, contactEntity);
+        List<AddressEntity> addresses = converterFromDTO.convertAddressDTOToAddressEntity(contactDTO, contactEntity);
 
         phoneRepo.deleteAllByContactEntity(contactEntity);
         addressRepo.deleteAllByContactEntity(contactEntity);
@@ -71,7 +76,6 @@ public class ContactServiceImpl implements ContactService {
     @Transactional(readOnly = true)
     public List<ContactDTO> getAllContactsByPhone(String phone) {
         List<PhoneEntity> phoneEntities = phoneRepo.findAllByPhone(phone);
-        System.out.println(phoneEntities);
         return phoneEntities.stream().map(phoneelement
                 -> getContact(phoneelement.getContactEntity().getId())).collect(Collectors.toList());
     }
@@ -89,7 +93,7 @@ public class ContactServiceImpl implements ContactService {
         ContactEntity contactEntity = contactRepo.findById(id).orElseThrow(null);
         List<AddressEntity> addressEntities = addressRepo.findAllByContactEntityId(id);
         List<PhoneEntity> phoneEntities = phoneRepo.findByContactEntityId(id);
-        return ConverterToDTO.convertContactEntityToContactDTO(contactEntity, addressEntities, phoneEntities);
+        return converterToDTO.convertContactEntityToContactDTO(contactEntity, addressEntities, phoneEntities);
     }
 
     @Override
