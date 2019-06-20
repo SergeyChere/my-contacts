@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <form action="/action_page.php">
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="Search by name" name="search">
+      <div class="input-group-btn">
+        <button class="btn btn-default" type="submit" id="email" (click)="getContactByPhone($event)"><i class="glyphicon glyphicon-search"></i></button>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="Search by phone" name="search">
+      <div class="input-group-btn">
+        <button class="btn btn-default" id="name" type="submit" (click)="getAllContactsByName($event)"><i class="glyphicon glyphicon-search"></i></button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="container">
+  <h2>Contacts</h2>
+  <table class="table">
+    <thead>
+    <tr>
+      <th> Name </th>
+      <th> Email </th>
+    </tr>
+    </thead>
+    <tbody *ngFor="let user of user">
+    <tr>
+      <td>{{user.fullName}}</td>
+      <td>{{user.email}}</td>
+      <button type="button" class="btn btn-success"> Details </button>
+      <button type="button" class="btn btn-warning"> Update </button>
+      <button type="button" class="btn btn-danger"> Delete </button>
+    </tr>
+    </tbody>
+  </table>
+  <button type="button" class="btn btn-success"> Create new contact </button>
+</div>
+</body>
+</html>
