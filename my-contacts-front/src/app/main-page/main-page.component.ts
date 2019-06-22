@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit, OnChanges, SimpleChanges, Injectable} from '@angular/core';
 import {HttpContactsService} from "../services/http-contacts.service";
 import User from "../model/User";
 
@@ -10,10 +10,12 @@ import User from "../model/User";
 export class MainPageComponent implements OnInit {
 
   user: User [] = [];
-  name: string;
-  phone: string;
 
-  constructor(private httpService: HttpContactsService) { }
+  @Input() name: string;
+  @Input() phone: string;
+
+  constructor(private httpService: HttpContactsService) {
+  }
 
   getUsers() {
     return this.httpService
@@ -22,6 +24,7 @@ export class MainPageComponent implements OnInit {
   }
 
   getAllContactsByName(name) {
+    console.log(name);
     return this.httpService
       .getAllContactsByName(name)
       .subscribe(data => this.user = data);

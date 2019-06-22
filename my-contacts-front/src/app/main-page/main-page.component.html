@@ -13,16 +13,11 @@
 <div class="container">
   <form action="/action_page.php">
     <div class="input-group">
-      <input type="text" class="form-control" placeholder="Search by name" name="search">
+      <input type="text" class="form-control" placeholder="Search by name" name="name">
       <div class="input-group-btn">
-        <button class="btn btn-default" type="submit" id="email" (click)="getContactByPhone($event)"><i class="glyphicon glyphicon-search"></i></button>
-      </div>
-    </div>
-
-    <div class="input-group">
-      <input type="text" class="form-control" placeholder="Search by phone" name="search">
-      <div class="input-group-btn">
-        <button class="btn btn-default" id="name" type="submit" (click)="getAllContactsByName($event)"><i class="glyphicon glyphicon-search"></i></button>
+        <button class="btn btn-default" type="submit" id="name" (click)="getAllContactsByName(name)">
+          <i class="glyphicon glyphicon-search"></i>
+        </button>
       </div>
     </div>
   </form>
@@ -47,7 +42,7 @@
     </tr>
     </tbody>
   </table>
-  <button type="button" class="btn btn-success"> Create new contact </button>
+  <button type="button" class="btn btn-success" routerLink="/details"> Create new contact </button>
 </div>
 </body>
 </html>

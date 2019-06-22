@@ -9,11 +9,16 @@ import { Routes, RouterModule } from "@angular/router";
 import {MatTableModule, MatTabsModule} from "@angular/material";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { CreateUpdateComponent } from './create-update/create-update.component';
+import {FormsModule} from "@angular/forms";
 
 const routes: Routes = [
   {
     path: '',
     component: MainPageComponent
+  },
+  {
+    path: 'details',
+    component: CreateUpdateComponent
   }
 ];
 
@@ -31,6 +36,7 @@ const routes: Routes = [
     MatTabsModule,
     MatTableModule,
     RouterModule,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
